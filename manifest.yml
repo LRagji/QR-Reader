@@ -1,0 +1,7 @@
+---
+applications:
+  - name: google-perspective-toolkit
+    buildpack: https://github.com/cloudfoundry/nodejs-buildpack.git
+    memory: 2G
+    instances: 1
+    command: npx http-server -p $PORT --proxy http://localhost:8080/node_modules/perception-toolkit/

@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+
+
+
+
+    <!-- <script>
+
+        // Fires if the device does not have the required APIs.
+        window.addEventListener(PerceptionToolkit.Events.DeviceNotSupported, () => {
+            // Handle unsupported devices.
+            console.log("Unsupported");
+        });
+
+        // Config - place above the previous script element.
+        window.PerceptionToolkit = window.PerceptionToolkit || {};
+        window.PerceptionToolkit.config = {
+            // The location of the installed toolkit.
+            root: '/node_modules/perception-toolkit',
+
+            // The element used to launch the experience.
+            button: document.getElementById('get-started')
+        }
+    </script>-->
+
+    <style>
+        #get-started {
+            display: none;
+        }
+
+        #get-started.visible {
+            display: block;
+        }
+    </style>
+    <link rel="stylesheet" href="/node_modules/perception-toolkit/styles/perception-toolkit.css">
+
+    <script>
+        window.WebComponents = window.WebComponents || {};
+        window.WebComponents.root = '/node_modules/@webcomponents/webcomponentsjs/';
+    </script>
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.googleapis.com/",
+          "@type": "ARArtifact",
+          "arTarget": {
+            "@type": "Barcode",
+            "text": "Inline Barcode"
+          },
+          "arContent": {
+            "@type": "WebPage",
+            "url": "http://example.com/item.html",
+            "name": "Item name",
+            "description": "A short description explaining a little more about the item.",
+            "image": "http://example.com/images/item-image.jpg"
+          }
+        }
+        </script>
+    <script src="/node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+</head>
+
+<body>
+
+    <h1>Hello, world!</h1>
+
+    <div class="container"></div>
+    <button id="get-started">Scan QR Code</button>
+
+    <script>
+        window.PerceptionToolkit = window.PerceptionToolkit || {};
+        window.PerceptionToolkit.config = {
+            // The element to use to launch.  (Step 3, above)
+            button: document.getElementById('get-started'),
+
+            // The container for generated cards.  (Step 3, above)
+            cardContainer: document.body.querySelector('.container'),
+
+            // Whether to show the onboarding flow.
+            onboarding: true,
+
+            // Which images to show in carousel during onboarding
+            onboardingImages: [
+                '/demo/common/images/step1.jpg',
+                '/demo/common/images/step2.jpg',
+                '/demo/common/images/step3.jpg'
+            ],
+
+            //   // Sources from which to load AR ARtifacts.  Will load after Perception init.
+            artifactSources: [
+                './pages/barcode.html',
+                './pages/lighthouse.html'
+            ],
+        };
+    </script>
+    <script src="/node_modules/perception-toolkit/lib/bundled/bootstrap.js"></script>
+
+
+
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
