@@ -1,124 +1,123 @@
-<!doctype html>
-<html lang="en">
+<html>
 
 <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-    <title>Hello, world!</title>
-
-
-
-
-    <!-- <script>
-
-        // Fires if the device does not have the required APIs.
-        window.addEventListener(PerceptionToolkit.Events.DeviceNotSupported, () => {
-            // Handle unsupported devices.
-            console.log("Unsupported");
-        });
-
-        // Config - place above the previous script element.
-        window.PerceptionToolkit = window.PerceptionToolkit || {};
-        window.PerceptionToolkit.config = {
-            // The location of the installed toolkit.
-            root: '/node_modules/perception-toolkit',
-
-            // The element used to launch the experience.
-            button: document.getElementById('get-started')
-        }
-    </script>-->
-
+    <title>QR Reader</title>
+    <script src="https://unpkg.com/jsqr@1.2.0/dist/jsQR.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Ropa+Sans" rel="stylesheet">
     <style>
-        #get-started {
-            display: none;
+        body {
+            font-family: 'Ropa Sans', sans-serif;
+            color: #333;
+            max-width: 640px;
+            margin: 0 auto;
+            position: relative;
         }
 
-        #get-started.visible {
-            display: block;
+        #githubLink {
+            position: absolute;
+            right: 0;
+            top: 12px;
+            color: #2D99FF;
+        }
+
+        h1 {
+            margin: 10px 0;
+            font-size: 40px;
+        }
+
+        #loadingMessage {
+            text-align: center;
+            padding: 40px;
+            background-color: #eee;
+        }
+
+        #canvas {
+            width: 100%;
+        }
+
+        #output {
+            margin-top: 20px;
+            background: #eee;
+            padding: 10px;
+            padding-bottom: 0;
+        }
+
+        #output div {
+            padding-bottom: 10px;
+            word-wrap: break-word;
+        }
+
+        #noQRFound {
+            text-align: center;
         }
     </style>
-    <link rel="stylesheet" href="/node_modules/perception-toolkit/styles/perception-toolkit.css">
-
-    <script>
-        window.WebComponents = window.WebComponents || {};
-        window.WebComponents.root = '/node_modules/@webcomponents/webcomponentsjs/';
-    </script>
-    <script type="application/ld+json">
-        {
-          "@context": "https://schema.googleapis.com/",
-          "@type": "ARArtifact",
-          "arTarget": {
-            "@type": "Barcode",
-            "text": "Inline Barcode"
-          },
-          "arContent": {
-            "@type": "WebPage",
-            "url": "http://example.com/item.html",
-            "name": "Item name",
-            "description": "A short description explaining a little more about the item.",
-            "image": "http://example.com/images/item-image.jpg"
-          }
-        }
-        </script>
-    <script src="/node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
 </head>
 
 <body>
-
-    <h1>Hello, world!</h1>
-
-    <div class="container"></div>
-    <button id="get-started">Scan QR Code</button>
-
+    <h1>QR Code Reader</h1>
+    <div id="loadingMessage">🎥 Unable to access video stream (please make sure you have a webcam enabled)</div>
+    <canvas id="canvas" hidden></canvas>
+    <div id="output" hidden>
+        <div id="outputMessage">No QR code detected.</div>
+        <div hidden><b>Data:</b> <span id="outputData"></span></div>
+    </div>
     <script>
-        window.PerceptionToolkit = window.PerceptionToolkit || {};
-        window.PerceptionToolkit.config = {
-            // The element to use to launch.  (Step 3, above)
-            button: document.getElementById('get-started'),
+        var video = document.createElement("video");
+        var canvasElement = document.getElementById("canvas");
+        var canvas = canvasElement.getContext("2d");
+        var loadingMessage = document.getElementById("loadingMessage");
+        var outputContainer = document.getElementById("output");
+        var outputMessage = document.getElementById("outputMessage");
+        var outputData = document.getElementById("outputData");
 
-            // The container for generated cards.  (Step 3, above)
-            cardContainer: document.body.querySelector('.container'),
+        function drawLine(begin, end, color) {
+            canvas.beginPath();
+            canvas.moveTo(begin.x, begin.y);
+            canvas.lineTo(end.x, end.y);
+            canvas.lineWidth = 4;
+            canvas.strokeStyle = color;
+            canvas.stroke();
+        }
 
-            // Whether to show the onboarding flow.
-            onboarding: true,
+        // Use facingMode: environment to attemt to get the front camera on phones
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function (stream) {
+            video.srcObject = stream;
+            video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
+            video.play();
+            requestAnimationFrame(tick);
+        });
 
-            // Which images to show in carousel during onboarding
-            onboardingImages: [
-                '/demo/common/images/step1.jpg',
-                '/demo/common/images/step2.jpg',
-                '/demo/common/images/step3.jpg'
-            ],
+        function tick() {
+            loadingMessage.innerText = "⌛ Loading video..."
+            if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                loadingMessage.hidden = true;
+                canvasElement.hidden = false;
+                outputContainer.hidden = false;
 
-            //   // Sources from which to load AR ARtifacts.  Will load after Perception init.
-            artifactSources: [
-                './pages/barcode.html',
-                './pages/lighthouse.html'
-            ],
-        };
+                canvasElement.height = video.videoHeight;
+                canvasElement.width = video.videoWidth;
+                canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+                var imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+                var code = jsQR(imageData.data, imageData.width, imageData.height, {
+                    inversionAttempts: "dontInvert",
+                });
+                if (code) {
+                    drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#FF3B58");
+                    drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#FF3B58");
+                    drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
+                    drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
+                    outputMessage.hidden = true;
+                    outputData.parentElement.hidden = false;
+                    outputData.innerText = code.data;
+                } else {
+                    outputMessage.hidden = false;
+                    outputData.parentElement.hidden = true;
+                }
+            }
+            requestAnimationFrame(tick);
+        }
     </script>
-    <script src="/node_modules/perception-toolkit/lib/bundled/bootstrap.js"></script>
-
-
-
-
-
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
 </body>
 
 </html>
