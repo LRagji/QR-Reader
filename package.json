@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start":"npx owc-dev-server"
+    "start": "npx owc-dev-server -p 3000"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.17.1",
     "http-server": "^0.11.1",
     "jsqr": "^1.2.0",
     "lit-element": "^2.2.0"
