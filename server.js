@@ -12,6 +12,6 @@ https.createServer({
     cert: fs.readFileSync('./keys/cert.pem'),
     passphrase: 'P@55word'
 }, app)
-    .listen(443, () => {
+    .listen(8080, () => {
         console.log("Server running on secured port!");
     });
