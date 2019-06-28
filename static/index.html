@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>QR Reader</title>
     <script src="https://unpkg.com/jsqr@1.2.0/dist/jsQR.js"></script>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <style>
         body {
             font-family: sans-serif;
@@ -37,7 +38,7 @@
 
         #output {
             margin-top: 20px;
-            background: #eee;
+            /* background: #eee; */
             padding: 10px;
             padding-bottom: 0;
         }
@@ -59,7 +60,11 @@
     <canvas id="canvas" hidden></canvas>
     <div id="output" hidden>
         <div id="outputMessage">No QR code detected.</div>
-        <div hidden ><h1 id="outputData"></h1></div>
+        <ul id="outputData" class="w3-ul w3-card-4 w3-center">
+            <li>
+                <h2>Data</h2>
+            </li>
+        </ul>
     </div>
     <script>
         var video = document.createElement("video");
@@ -68,7 +73,7 @@
         var loadingMessage = document.getElementById("loadingMessage");
         var outputContainer = document.getElementById("output");
         var outputMessage = document.getElementById("outputMessage");
-        var outputData = document.getElementById("outputData");
+        let dataListElement = document.getElementById("outputData");
 
         function drawLine(begin, end, color) {
             canvas.beginPath();
@@ -77,6 +82,29 @@
             canvas.lineWidth = 4;
             canvas.strokeStyle = color;
             canvas.stroke();
+        }
+
+        function decode(encData) {
+            const decodeOffset = -8;
+            let clearValue = "";
+            for (var counter = 0; counter < encData.length; counter++) {
+                clearValue = clearValue + String.fromCharCode(encData.charCodeAt(counter) + decodeOffset);
+            }
+            return clearValue;
+        }
+
+        function displayData(data) {
+            const splitChar = ";";
+            let properties = data.split(splitChar);
+            for (var counter = 0; counter < properties.length; counter++) {
+                appendList(dataListElement, properties[counter]);
+            }
+        }
+
+        function appendList(listElement, data) {
+            let li = document.createElement("li");
+            li.appendChild(document.createTextNode(data));
+            listElement.appendChild(li);
         }
 
         // Use facingMode: environment to attemt to get the front camera on phones
@@ -107,11 +135,11 @@
                     drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
                     drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
                     outputMessage.hidden = true;
-                    outputData.parentElement.hidden = false;
-                    outputData.innerText = code.data;
+                    dataListElement.parentElement.hidden = false;
+                    displayData(decode(code.data));
                 } else {
                     outputMessage.hidden = false;
-                    outputData.parentElement.hidden = true;
+                    dataListElement.parentElement.hidden = true;
                     requestAnimationFrame(tick);
                 }
             }
