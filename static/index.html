@@ -4,10 +4,9 @@
     <meta charset="utf-8">
     <title>QR Reader</title>
     <script src="https://unpkg.com/jsqr@1.2.0/dist/jsQR.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Ropa+Sans" rel="stylesheet">
     <style>
         body {
-            font-family: 'Ropa Sans', sans-serif;
+            font-family: sans-serif;
             color: #333;
             max-width: 640px;
             margin: 0 auto;
@@ -113,9 +112,10 @@
                 } else {
                     outputMessage.hidden = false;
                     outputData.parentElement.hidden = true;
+                    requestAnimationFrame(tick);
                 }
             }
-            requestAnimationFrame(tick);
+            
         }
     </script>
 </body>
