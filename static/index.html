@@ -4,15 +4,16 @@
     <meta charset="utf-8">
     <title>QR Reader</title>
     <script src="https://unpkg.com/jsqr@1.2.0/dist/jsQR.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <style>
-        body {
+        /* body {
             font-family: sans-serif;
             color: #333;
             max-width: 640px;
             margin: 0 auto;
             position: relative;
-        }
+        } */
 
         #githubLink {
             position: absolute;
@@ -55,7 +56,10 @@
 </head>
 
 <body>
-    <h1>QR Code Reader</h1>
+    <div class="w3-bar w3-blue">
+        <h2 class="w3-bar-item">QR Code Reader</h2>
+    </div>
+
     <div id="loadingMessage">🎥 Unable to access video stream (please make sure you have a webcam enabled)</div>
     <canvas id="canvas" hidden></canvas>
     <div id="output" hidden>
