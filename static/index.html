@@ -7,26 +7,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <style>
-        /* body {
-            font-family: sans-serif;
-            color: #333;
-            max-width: 640px;
-            margin: 0 auto;
-            position: relative;
-        } */
-
-        #githubLink {
-            position: absolute;
-            right: 0;
-            top: 12px;
-            color: #2D99FF;
-        }
-
-        h1 {
-            margin: 10px 0;
-            font-size: 40px;
-        }
-
         #loadingMessage {
             text-align: center;
             padding: 40px;
@@ -36,133 +16,130 @@
         #canvas {
             width: 100%;
         }
-
-        #output {
-            margin-top: 20px;
-            /* background: #eee; */
-            padding: 10px;
-            padding-bottom: 0;
-        }
-
-        #output div {
-            padding-bottom: 10px;
-            word-wrap: break-word;
-        }
-
-        #noQRFound {
-            text-align: center;
-        }
-    </style>
+   </style>
 </head>
 
 <body>
     <div class="w3-bar w3-blue">
-        <h2 class="w3-bar-item">QR Code Reader</h2>
+        <h3 class="w3-bar-item">QR Code Reader</h3>
     </div>
 
     <div id="loadingMessage">🎥 Unable to access video stream (please make sure you have a webcam enabled)</div>
     <canvas id="canvas" hidden></canvas>
     <div id="output" hidden>
-        <div id="outputMessage">No QR code detected.</div>
+        <div class="w3-center" id="outputMessage">No QR code detected.</div>
+    </div>
 
-        <div id="outputData">
-            <div class="w3-row">
-                <div class="w3-half w3-container">
-                    <span style="font-weight: bold" id="cell0"></span>
+
+
+    <div id="id01" class="w3-modal">
+        <div class="w3-modal-content">
+            <header class="w3-container w3-blue">
+                <span onclick="document.getElementById('id01').style.display='none'"
+                    class="w3-button w3-display-topright">&times;</span>
+                <h5>Details</h5>
+            </header>
+            <div class="w3-container w3-margin-top w3-margin-bottom">
+                <div id="outputData">
+                    <div class="w3-row">
+                        <div class="w3-col s6 w3-container">
+                            <span style="font-weight: bold" id="cell0"></span>
+                        </div>
+
+                        <div class="w3-col s3 w3-container">
+                            <span style="font-weight: bold" id="cell1"></span>
+                        </div>
+                        <div class="w3-col s3 w3-container">
+                            <span id="cell2"></span>
+                        </div>
+                    </div>
+                    <div class="w3-row">
+                        <div class="w3-col s6 w3-container">
+                            <span id="cell3"></span>
+                        </div>
+
+                        <div class="w3-col s3 w3-container">
+                            <span id="cell4"></span>
+                        </div>
+                        <div class="w3-col s3 w3-container">
+                            <span id="cell5"></span>
+                        </div>
+                    </div>
+                    <div class="w3-row">
+                        <div class="w3-col s6 w3-container">
+                            <h2></h2>
+                        </div>
+
+                        <div class="w3-col s3 w3-container">
+                            <b>USD</b>
+                        </div>
+                        <div class="w3-col s3 w3-container">
+                            <b>EURO</b>
+                        </div>
+                    </div>
+                    <div class="w3-row">
+                        <div class="w3-col s6 w3-container">
+                            <span id="cell6"></span>
+                        </div>
+
+                        <div class="w3-col s3 w3-container">
+                            <span id="cell7"></span>
+                        </div>
+                        <div class="w3-col s3 w3-container">
+                            <span id="cell8"></span>
+                        </div>
+                    </div>
+                    <div class="w3-row">
+                        <div class="w3-col s6 w3-container">
+                            <span id="cell9"></span>
+                        </div>
+
+                        <div class="w3-col s3 w3-container">
+                            <span id="cell10"></span>
+                        </div>
+                        <div class="w3-col s3 w3-container">
+                            <span id="cell11"></span>
+                        </div>
+                    </div>
+                    <div class="w3-row">
+                        <div class="w3-col s6 w3-container">
+                            <span id="cell12"></span>
+                        </div>
+
+                        <div class="w3-col s3 w3-container">
+                            <span id="cell13"></span>
+                        </div>
+                        <div class="w3-col s3 w3-container">
+                            <span id="cell14"></span>
+                        </div>
+                    </div>
+                    <div class="w3-row">
+                        <div class="w3-col s6 w3-container">
+                            <span id="cell15"></span>
+                        </div>
+
+                        <div class="w3-col s3 w3-container">
+                            <span id="cell16"></span>
+                        </div>
+                        <div class="w3-col s3 w3-container">
+                            <span id="cell17"></span>
+                        </div>
+                    </div>
+                    <div class="w3-row">
+                        <div class="w3-rest w3-container">
+                            <span id="cell18"></span>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="w3-quarter w3-container">
-                    <span style="font-weight: bold" id="cell1"></span>
-                </div>
-                <div class="w3-quarter w3-container">
-                    <span id="cell2"></span>
-                </div>
             </div>
-            <div class="w3-row">
-                <div class="w3-half w3-container">
-                    <span id="cell3"></span>
-                </div>
-
-                <div class="w3-quarter w3-container">
-                    <span id="cell4"></span>
-                </div>
-                <div class="w3-quarter w3-container">
-                    <span id="cell5"></span>
-                </div>
-            </div>
-            <div class="w3-row">
-                <div class="w3-half w3-container">
-                    <h2></h2>
-                </div>
-
-                <div class="w3-quarter w3-container">
-                    <b>USD</b>
-                </div>
-                <div class="w3-quarter w3-container">
-                    <b>EURO</b>
-                </div>
-            </div>
-            <div class="w3-row">
-                <div class="w3-half w3-container">
-                    <span id="cell6"></span>
-                </div>
-
-                <div class="w3-quarter w3-container">
-                    <span id="cell7"></span>
-                </div>
-                <div class="w3-quarter w3-container">
-                    <span id="cell8"></span>
-                </div>
-            </div>
-            <div class="w3-row">
-                <div class="w3-half w3-container">
-                    <span id="cell9"></span>
-                </div>
-
-                <div class="w3-quarter w3-container">
-                    <span id="cell10"></span>
-                </div>
-                <div class="w3-quarter w3-container">
-                    <span id="cell11"></span>
-                </div>
-            </div>
-            <div class="w3-row">
-                <div class="w3-half w3-container">
-                    <span id="cell12"></span>
-                </div>
-
-                <div class="w3-quarter w3-container">
-                    <span id="cell13"></span>
-                </div>
-                <div class="w3-quarter w3-container">
-                    <span id="cell14"></span>
-                </div>
-            </div>
-            <div class="w3-row">
-                <div class="w3-half w3-container">
-                    <span id="cell15"></span>
-                </div>
-
-                <div class="w3-quarter w3-container">
-                    <span id="cell16"></span>
-                </div>
-                <div class="w3-quarter w3-container">
-                    <span id="cell17"></span>
-                </div>
-            </div>
-            <div class="w3-row">
-                <div class="w3-rest w3-container">
-                    <span id="cell18"></span>
-                </div>
-            </div>
-            <div class="w3-row w3-display-container">
-                <div class="w3-rest">
-                    <button class="w3-button w3-round w3-blue w3-display-middle" onclick="window.location.reload(true)">
-                        Scan another Tag</button>
-                </div>
-            </div>
+            <footer class="w3-container w3-center w3-padding">
+                <button class="w3-button w3-round w3-blue" onclick="window.location.reload(true)">
+                    Scan another Tag</button>
+            </footer>
         </div>
     </div>
+
     <script>
         var video = document.createElement("video");
         var canvasElement = document.getElementById("canvas");
@@ -256,12 +233,12 @@
                     drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
                     drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
                     outputMessage.hidden = true;
-                    dataElement.hidden = false;
+
                     displayData(decode(code.data));
                     stopVideoStream();
+                    document.getElementById('id01').style.display = 'block';//Show Modal
                 } else {
                     outputMessage.hidden = false;
-                    dataElement.hidden = true;
                     requestAnimationFrame(tick);
                 }
             }
