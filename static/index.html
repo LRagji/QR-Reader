@@ -60,11 +60,98 @@
     <canvas id="canvas" hidden></canvas>
     <div id="output" hidden>
         <div id="outputMessage">No QR code detected.</div>
-        <ul id="outputData" class="w3-ul w3-card-4 w3-center">
-            <li>
-                <h2>Data</h2>
-            </li>
-        </ul>
+
+        <div id="outputData">
+            <div class="w3-row">
+                <div class="w3-half w3-container">
+                    <span style="font-weight: bold" id="cell0"></span>
+                </div>
+
+                <div class="w3-quarter w3-container">
+                    <span style="font-weight: bold" id="cell1"></span>
+                </div>
+                <div class="w3-quarter w3-container">
+                    <span id="cell2"></span>
+                </div>
+            </div>
+            <div class="w3-row">
+                <div class="w3-half w3-container">
+                    <span id="cell3"></span>
+                </div>
+
+                <div class="w3-quarter w3-container">
+                    <span id="cell4"></span>
+                </div>
+                <div class="w3-quarter w3-container">
+                    <span id="cell5"></span>
+                </div>
+            </div>
+            <div class="w3-row">
+                <div class="w3-half w3-container">
+                    <h2></h2>
+                </div>
+
+                <div class="w3-quarter w3-container">
+                    <b>USD</b>
+                </div>
+                <div class="w3-quarter w3-container">
+                    <b>EURO</b>
+                </div>
+            </div>
+            <div class="w3-row">
+                <div class="w3-half w3-container">
+                    <span id="cell6"></span>
+                </div>
+
+                <div class="w3-quarter w3-container">
+                    <span id="cell7"></span>
+                </div>
+                <div class="w3-quarter w3-container">
+                    <span id="cell8"></span>
+                </div>
+            </div>
+            <div class="w3-row">
+                <div class="w3-half w3-container">
+                    <span id="cell9"></span>
+                </div>
+
+                <div class="w3-quarter w3-container">
+                    <span id="cell10"></span>
+                </div>
+                <div class="w3-quarter w3-container">
+                    <span id="cell11"></span>
+                </div>
+            </div>
+            <div class="w3-row">
+                <div class="w3-half w3-container">
+                    <span id="cell12"></span>
+                </div>
+
+                <div class="w3-quarter w3-container">
+                    <span id="cell13"></span>
+                </div>
+                <div class="w3-quarter w3-container">
+                    <span id="cell14"></span>
+                </div>
+            </div>
+            <div class="w3-row">
+                <div class="w3-half w3-container">
+                    <span id="cell15"></span>
+                </div>
+
+                <div class="w3-quarter w3-container">
+                    <span id="cell16"></span>
+                </div>
+                <div class="w3-quarter w3-container">
+                    <span id="cell17"></span>
+                </div>
+            </div>
+            <div class="w3-row">
+                <div class="w3-rest w3-container">
+                    <span id="cell18"></span>
+                </div>
+            </div>
+        </div>
     </div>
     <script>
         var video = document.createElement("video");
@@ -73,7 +160,8 @@
         var loadingMessage = document.getElementById("loadingMessage");
         var outputContainer = document.getElementById("output");
         var outputMessage = document.getElementById("outputMessage");
-        let dataListElement = document.getElementById("outputData");
+        let dataElement = document.getElementById("outputData");
+        var videoStream;
 
         function drawLine(begin, end, color) {
             canvas.beginPath();
@@ -97,19 +185,33 @@
             const splitChar = ";";
             let properties = data.split(splitChar);
             for (var counter = 0; counter < properties.length; counter++) {
-                appendList(dataListElement, properties[counter]);
+                showElement(properties, counter);
             }
         }
 
-        function appendList(listElement, data) {
-            let li = document.createElement("li");
-            li.appendChild(document.createTextNode(data));
-            listElement.appendChild(li);
+        function showElement(properties, index) {
+            let element = document.getElementById("cell" + index);
+            if (element != undefined) {
+                element.textContent = properties[index];
+            }
+            else {
+                console.warn("Element" + index + " not found");
+            }
+        }
+
+        function stopVideoStream() {
+            video.pause();
+            if (videoStream !== undefined && videoStream !== null) {
+                videoStream.getTracks().forEach(track => {
+                    track.stop();
+                });
+            }
         }
 
         // Use facingMode: environment to attemt to get the front camera on phones
         navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } }).then(function (stream) {
-            video.srcObject = stream;
+            videoStream = stream;
+            video.srcObject = videoStream;
             video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
             video.play();
             requestAnimationFrame(tick);
@@ -129,17 +231,27 @@
                 var code = jsQR(imageData.data, imageData.width, imageData.height, {
                     inversionAttempts: "dontInvert",
                 });
+                // var code = {
+                //     data: "XIZLI(9;A;<C9<=CNijzqk{CVm|C9;8CU\Z(((((((C:=(.(Ij~C9><C9::C9;5:<C9?:C9:@C?59:C9@9C9;<C95>C9A8C9<9CVI",
+                //     location: {
+                //         topLeftCorner: { x: 0, y: 0 },
+                //         topRightCorner: { x: 50, y: 0 },
+                //         bottomRightCorner: { x: 50, y: 50 },
+                //         bottomLeftCorner: { x: 0, y: 50 }
+                //     }
+                // }
                 if (code) {
                     drawLine(code.location.topLeftCorner, code.location.topRightCorner, "#FF3B58");
                     drawLine(code.location.topRightCorner, code.location.bottomRightCorner, "#FF3B58");
                     drawLine(code.location.bottomRightCorner, code.location.bottomLeftCorner, "#FF3B58");
                     drawLine(code.location.bottomLeftCorner, code.location.topLeftCorner, "#FF3B58");
                     outputMessage.hidden = true;
-                    dataListElement.parentElement.hidden = false;
+                    dataElement.hidden = false;
                     displayData(decode(code.data));
+                    stopVideoStream();
                 } else {
                     outputMessage.hidden = false;
-                    dataListElement.parentElement.hidden = true;
+                    dataElement.hidden = true;
                     requestAnimationFrame(tick);
                 }
             }
