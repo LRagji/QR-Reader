@@ -11,9 +11,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.18.2",
     "express-basic-auth": "^1.2.0",
-    "http-server": "^0.11.1",
+    "http-server": "^0.11.2",
     "jsqr": "^1.2.0",
     "lit-element": "^2.2.0"
   },
